@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContextHookerFixture.cs" />
+    <Compile Include="DbHookFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\DbContextStub.cs" />
     <Compile Include="Stubs\FooEntityStub.cs" />
