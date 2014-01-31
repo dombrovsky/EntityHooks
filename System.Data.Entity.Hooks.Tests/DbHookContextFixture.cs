@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace System.Data.Entity.Hooks.Tests
 {
-    internal sealed class DbHookContextFixture : HookerFixture
+    internal sealed class DbHookContextFixture : DbHookRegistrarFixture
     {
         private DbHookContextStub _dbHookContext;
 

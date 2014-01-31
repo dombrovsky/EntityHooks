@@ -48,6 +48,7 @@
     <Compile Include="DbHookContext.cs" />
     <Compile Include="IDbEntityEntry.cs" />
     <Compile Include="IDbHook.cs" />
+    <Compile Include="IDbHookRegistrar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@ using System.Data.Entity.Hooks.Tests.Stubs;
 namespace System.Data.Entity.Hooks.Tests
 {
     [TestFixture]
-    internal abstract class HookerFixture
+    internal abstract class DbHookRegistrarFixture
     {
         private Mock<IDbHook> _hook1;
         private Mock<IDbHook> _hook2;

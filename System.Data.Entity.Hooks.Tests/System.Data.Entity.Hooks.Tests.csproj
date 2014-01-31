@@ -57,7 +57,7 @@
     <Compile Include="DbContextHookerFixture.cs" />
     <Compile Include="DbHookContextFixture.cs" />
     <Compile Include="DbHookFixture.cs" />
-    <Compile Include="HookerFixture.cs" />
+    <Compile Include="DbHookRegistrarFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\DbContextStub.cs" />
     <Compile Include="Stubs\DbHookContextStub.cs" />

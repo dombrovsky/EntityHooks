@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace System.Data.Entity.Hooks.Tests
 {
-    internal sealed class DbContextHookerFixture : HookerFixture
+    internal sealed class DbContextHookerFixture : DbHookRegistrarFixture
     {
         private DbContextHooker _dbContextHooker;
 
@@ -15,12 +15,12 @@ namespace System.Data.Entity.Hooks.Tests
         }
 
         [Test]
-        public void ShouldNotRunHooks_AfterDispose()
+        public void ShouldNotInvokeHooks_AfterDispose()
         {
             var dbContext = new DbContextStub();
             var dbContextHooker = new DbContextHooker(dbContext);
             var hook = new Mock<IDbHook>();
-            dbContextHooker.RegisterPreSaveHook(hook.Object);
+            dbContextHooker.RegisterSaveHook(hook.Object);
 
             dbContext.Foos.Add(new FooEntityStub());
             dbContextHooker.Dispose();
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Hooks.Tests
 
         protected override void RegisterPreSaveHook(IDbHook hook)
         {
-            _dbContextHooker.RegisterPreSaveHook(hook);
+            _dbContextHooker.RegisterSaveHook(hook);
         }
 
         protected override IDbContext SetupDbContext()

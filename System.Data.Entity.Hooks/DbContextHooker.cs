@@ -8,7 +8,7 @@ namespace System.Data.Entity.Hooks
     /// <summary>
     /// Provides possibility to hook load and save actions of <see cref="DbContext"/>.
     /// </summary>
-    public sealed class DbContextHooker : IDisposable
+    public sealed class DbContextHooker : IDbHookRegistrar, IDisposable
     {
         private readonly DbContext _dbContext;
         private readonly List<IDbHook> _loadHooks;
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Hooks
         /// Registers a hook to run before save data occurs.
         /// </summary>
         /// <param name="dbHook">The hook to register.</param>
-        public void RegisterPreSaveHook(IDbHook dbHook)
+        public void RegisterSaveHook(IDbHook dbHook)
         {
             _saveHooks.Add(dbHook);
         }
