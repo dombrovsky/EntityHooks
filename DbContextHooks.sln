@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks", "System.Data.Entity.Hooks\System.Data.Entity.Hooks.csproj", "{431B123A-63DA-461E-BE75-CDE419261A22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Tests", "System.Data.Entity.Hooks.Tests\System.Data.Entity.Hooks.Tests.csproj", "{66735633-0F0F-4D97-913B-4C39173C58B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{431B123A-63DA-461E-BE75-CDE419261A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{431B123A-63DA-461E-BE75-CDE419261A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{431B123A-63DA-461E-BE75-CDE419261A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66735633-0F0F-4D97-913B-4C39173C58B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66735633-0F0F-4D97-913B-4C39173C58B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66735633-0F0F-4D97-913B-4C39173C58B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66735633-0F0F-4D97-913B-4C39173C58B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
