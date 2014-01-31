@@ -5,7 +5,7 @@ using System.Data.Entity.Hooks.Tests.Stubs;
 namespace System.Data.Entity.Hooks.Tests
 {
     [TestFixture]
-    public sealed class DbHookFixture
+    internal sealed class DbHookFixture
     {
         [Test]
         public void ShouldInvokeHookAction_IfAcceptableEntityType()

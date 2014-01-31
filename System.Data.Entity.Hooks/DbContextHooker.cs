@@ -11,7 +11,6 @@ namespace System.Data.Entity.Hooks
     public sealed class DbContextHooker : IDisposable
     {
         private readonly DbContext _dbContext;
-        private readonly ObjectContext _objectContext;
         private readonly List<IDbHook> _loadHooks;
         private readonly List<IDbHook> _saveHooks;
 
@@ -23,11 +22,11 @@ namespace System.Data.Entity.Hooks
         {
             _loadHooks = new List<IDbHook>();
             _saveHooks = new List<IDbHook>();
-
             _dbContext = dbContext;
-            _objectContext = ((IObjectContextAdapter)dbContext).ObjectContext;
-            _objectContext.ObjectMaterialized += ObjectMaterialized;
-            _objectContext.SavingChanges += SavingChanges;
+
+            var objectContext = ((IObjectContextAdapter)_dbContext).ObjectContext;
+            objectContext.ObjectMaterialized += ObjectMaterialized;
+            objectContext.SavingChanges += SavingChanges;
         }
 
         /// <summary>
@@ -53,8 +52,9 @@ namespace System.Data.Entity.Hooks
         /// </summary>
         public void Dispose()
         {
-            _objectContext.ObjectMaterialized -= ObjectMaterialized;
-            _objectContext.SavingChanges -= SavingChanges;
+            var objectContext = ((IObjectContextAdapter)_dbContext).ObjectContext;
+            objectContext.ObjectMaterialized -= ObjectMaterialized;
+            objectContext.SavingChanges -= SavingChanges;
         }
 
         private void SavingChanges(object sender, EventArgs e)

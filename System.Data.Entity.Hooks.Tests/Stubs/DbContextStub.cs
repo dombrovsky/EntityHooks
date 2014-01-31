@@ -1,6 +1,6 @@
 ﻿namespace System.Data.Entity.Hooks.Tests.Stubs
 {
-    internal class DbContextStub : DbContext
+    internal class DbContextStub : DbContext, IDbContext
     {
         private static string _connectionId;
 

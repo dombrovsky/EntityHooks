@@ -55,10 +55,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContextHookerFixture.cs" />
+    <Compile Include="DbHookContextFixture.cs" />
     <Compile Include="DbHookFixture.cs" />
+    <Compile Include="HookerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stubs\DbContextStub.cs" />
+    <Compile Include="Stubs\DbHookContextStub.cs" />
     <Compile Include="Stubs\FooEntityStub.cs" />
+    <Compile Include="Stubs\IDbContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\System.Data.Entity.Hooks\System.Data.Entity.Hooks.csproj">

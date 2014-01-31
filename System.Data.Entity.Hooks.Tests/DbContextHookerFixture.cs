@@ -4,105 +4,49 @@ using NUnit.Framework;
 
 namespace System.Data.Entity.Hooks.Tests
 {
-    [TestFixture]
-    public sealed class DbContextHookerFixture
+    internal sealed class DbContextHookerFixture : HookerFixture
     {
-        private DbContextStub _dbContext;
-        private Mock<IDbHook> _hook1;
-        private Mock<IDbHook> _hook2;
+        private DbContextHooker _dbContextHooker;
 
         [SetUp]
-        public void SetUp()
+        public void Setup()
         {
             DbContextStub.ResetConnections();
-            _dbContext = new DbContextStub();
-            _hook1 = new Mock<IDbHook>();
-            _hook2 = new Mock<IDbHook>();
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _dbContext.Dispose();
-        }
-
-        [Test]
-        public void ShouldRunPreSaveHooks_OnSave()
-        {
-            var dbContextHooker = new DbContextHooker(_dbContext);
-            dbContextHooker.RegisterPreSaveHook(_hook1.Object);
-            dbContextHooker.RegisterPreSaveHook(_hook2.Object);
-
-            var foo = new FooEntityStub();
-            _dbContext.Foos.Add(foo);
-            _dbContext.SaveChanges();
-
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-        }
-
-        [Test]
-        public void ShouldRunLoadHooks_OnLoad()
-        {
-            var foo = new FooEntityStub();
-            _dbContext.Foos.Add(foo);
-            _dbContext.SaveChanges();
-            _dbContext.Dispose();
-
-            _dbContext = new DbContextStub();
-            var dbContextHooker = new DbContextHooker(_dbContext);
-
-            dbContextHooker.RegisterLoadHook(_hook1.Object);
-            dbContextHooker.RegisterLoadHook(_hook2.Object);
-
-            _dbContext.Foos.Load();
-
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-        }
-
-        [Test]
-        public void ShouldNotRunLoadHooks_OnSave()
-        {
-            var dbContextHooker = new DbContextHooker(_dbContext);
-            dbContextHooker.RegisterLoadHook(_hook1.Object);
-
-            var foo = new FooEntityStub();
-            _dbContext.Foos.Add(foo);
-            _dbContext.SaveChanges();
-
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
-        }
-
-        [Test]
-        public void ShouldNotRunPreSaveHooks_OnLoad()
-        {
-            var foo = new FooEntityStub();
-            _dbContext.Foos.Add(foo);
-            _dbContext.SaveChanges();
-            _dbContext.Dispose();
-
-            _dbContext = new DbContextStub();
-            var dbContextHooker = new DbContextHooker(_dbContext);
-            dbContextHooker.RegisterPreSaveHook(_hook1.Object);
-
-            _dbContext.Foos.Load();
-
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
         }
 
         [Test]
         public void ShouldNotRunHooks_AfterDispose()
         {
-            var dbContextHooker = new DbContextHooker(_dbContext);
-            dbContextHooker.RegisterPreSaveHook(_hook1.Object);
+            var dbContext = new DbContextStub();
+            var dbContextHooker = new DbContextHooker(dbContext);
+            var hook = new Mock<IDbHook>();
+            dbContextHooker.RegisterPreSaveHook(hook.Object);
 
-            _dbContext.Foos.Add(new FooEntityStub());
+            dbContext.Foos.Add(new FooEntityStub());
             dbContextHooker.Dispose();
-            var savedEntities = _dbContext.SaveChanges();
+            var savedEntities = dbContext.SaveChanges();
 
             Assert.That(savedEntities, Is.EqualTo(1));
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
+            hook.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
+
+            dbContext.Dispose();
+        }
+
+        protected override void RegisterLoadHook(IDbHook hook)
+        {
+            _dbContextHooker.RegisterLoadHook(hook);
+        }
+
+        protected override void RegisterPreSaveHook(IDbHook hook)
+        {
+            _dbContextHooker.RegisterPreSaveHook(hook);
+        }
+
+        protected override IDbContext SetupDbContext()
+        {
+            var dbContext = new DbContextStub();
+            _dbContextHooker = new DbContextHooker(dbContext);
+            return dbContext;
         }
     }
 }
