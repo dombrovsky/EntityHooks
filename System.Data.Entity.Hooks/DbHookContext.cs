@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -10,19 +11,100 @@ namespace System.Data.Entity.Hooks
     /// </summary>
     public abstract class DbHookContext : DbContext
     {
-        private readonly List<IDbHook> _loadHooks;
-        private readonly List<IDbHook> _preSaveHooks;
-        private readonly List<IDbHook> _postSaveHooks;
+        private readonly List<IDbHook> _loadHooks = new List<IDbHook>();
+        private readonly List<IDbHook> _preSaveHooks = new List<IDbHook>();
+        private readonly List<IDbHook> _postSaveHooks = new List<IDbHook>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DbHookContext"/> class.
+        /// Constructs a new context instance using conventions to create the name of the database to
+        ///             which a connection will be made.  The by-convention name is the full name (namespace + class name)
+        ///             of the derived context class.
+        ///             See the class remarks for how this is used to create a connection.
+        /// 
         /// </summary>
         protected DbHookContext()
         {
-            _loadHooks = new List<IDbHook>();
-            _preSaveHooks = new List<IDbHook>();
-            _postSaveHooks = new List<IDbHook>();
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
+        }
 
+        /// <summary>
+        /// Constructs a new context instance using conventions to create the name of the database to
+        ///             which a connection will be made, and initializes it from the given model.
+        ///             The by-convention name is the full name (namespace + class name) of the derived context class.
+        ///             See the class remarks for how this is used to create a connection.
+        /// 
+        /// </summary>
+        /// <param name="model">The model that will back this context. </param>
+        protected DbHookContext(DbCompiledModel model)
+            : base(model)
+        {
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
+        }
+
+        /// <summary>
+        /// Constructs a new context instance using the given string as the name or connection string for the
+        ///             database to which a connection will be made.
+        ///             See the class remarks for how this is used to create a connection.
+        /// 
+        /// </summary>
+        /// <param name="nameOrConnectionString">Either the database name or a connection string. </param>
+        protected DbHookContext(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
+        }
+
+        /// <summary>
+        /// Constructs a new context instance using the given string as the name or connection string for the
+        ///             database to which a connection will be made, and initializes it from the given model.
+        ///             See the class remarks for how this is used to create a connection.
+        /// 
+        /// </summary>
+        /// <param name="nameOrConnectionString">Either the database name or a connection string. </param><param name="model">The model that will back this context. </param>
+        protected DbHookContext(string nameOrConnectionString, DbCompiledModel model)
+            : base(nameOrConnectionString, model)
+        {
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
+        }
+
+        /// <summary>
+        /// Constructs a new context instance using the existing connection to connect to a database.
+        ///             The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection"/>
+        ///             is <c>false</c>.
+        /// 
+        /// </summary>
+        /// <param name="existingConnection">An existing connection to use for the new context. </param><param name="contextOwnsConnection">If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
+        ///             </param>
+        protected DbHookContext(DbConnection existingConnection, bool contextOwnsConnection) 
+            : base(existingConnection, contextOwnsConnection)
+        {
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
+        }
+
+        /// <summary>
+        /// Constructs a new context instance using the existing connection to connect to a database,
+        ///             and initializes it from the given model.
+        ///             The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection"/>
+        ///             is <c>false</c>.
+        /// 
+        /// </summary>
+        /// <param name="existingConnection">An existing connection to use for the new context. </param><param name="model">The model that will back this context. </param><param name="contextOwnsConnection">If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
+        ///             </param>
+        protected DbHookContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection) 
+            : base(existingConnection, model, contextOwnsConnection)
+        {
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
+        }
+
+        /// <summary>
+        /// Constructs a new context instance around an existing ObjectContext.
+        /// 
+        /// </summary>
+        /// <param name="objectContext">An existing ObjectContext to wrap with the new context. </param><param name="dbContextOwnsObjectContext">If set to <c>true</c> the ObjectContext is disposed when the DbContext is disposed, otherwise the caller must dispose the connection.
+        ///             </param>
+        protected DbHookContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
+            : base(objectContext, dbContextOwnsObjectContext)
+        {
             ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectMaterialized;
         }
 
