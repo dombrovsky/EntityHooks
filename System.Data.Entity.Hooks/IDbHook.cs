@@ -1,6 +1,4 @@
-﻿using System.Data.Entity.Infrastructure;
-
-namespace System.Data.Entity.Hooks
+﻿namespace System.Data.Entity.Hooks
 {
     /// <summary>
     /// Database action hook.
@@ -11,6 +9,6 @@ namespace System.Data.Entity.Hooks
         /// Hooks the entity entry.
         /// </summary>
         /// <param name="entry">The entity entry.</param>
-        void HookEntry(DbEntityEntry entry);
+        void HookEntry(IDbEntityEntry entry);
     }
 }

@@ -43,8 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbContextHooker.cs" />
+    <Compile Include="DbEntityEntryAdapter.cs" />
     <Compile Include="DbHook.cs" />
     <Compile Include="DbHookContext.cs" />
+    <Compile Include="IDbEntityEntry.cs" />
     <Compile Include="IDbHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

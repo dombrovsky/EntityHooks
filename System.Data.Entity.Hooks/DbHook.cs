@@ -35,7 +35,7 @@ namespace System.Data.Entity.Hooks
         /// Hooks the entity entry.
         /// </summary>
         /// <param name="entry">The entity entry.</param>
-        public void HookEntry(DbEntityEntry entry)
+        public void HookEntry(IDbEntityEntry entry)
         {
             var entity = entry.Entity as TEntity;
             if (entity != null && (_hookEntityState & entry.State) != 0)

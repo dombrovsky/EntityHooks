@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 
 namespace System.Data.Entity.Hooks
 {
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Hooks
 
         private void SavingChanges(object sender, EventArgs e)
         {
-            foreach (var entry in _dbContext.ChangeTracker.Entries())
+            foreach (var entry in _dbContext.ChangeTracker.Entries().Select(entry => new DbEntityEntryAdapter(entry)))
             {
                 foreach (var preSaveHook in _saveHooks)
                 {
@@ -69,9 +70,10 @@ namespace System.Data.Entity.Hooks
 
         private void ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
+            var entry = new DbEntityEntryAdapter(_dbContext.Entry(e.Entity));
             foreach (var loadHook in _loadHooks)
             {
-                loadHook.HookEntry(_dbContext.Entry(e.Entity));
+                loadHook.HookEntry(entry);
             }
         }
     }

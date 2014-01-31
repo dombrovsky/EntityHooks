@@ -114,7 +114,7 @@ namespace System.Data.Entity.Hooks
         /// <returns>The number of objects written to the underlying database.</returns>
         public override int SaveChanges()
         {
-            var entries = ChangeTracker.Entries().ToArray();
+            var entries = ChangeTracker.Entries().Select(entry => new DbEntityEntryAdapter(entry)).ToArray();
 
             foreach (var entry in entries)
             {
@@ -169,9 +169,10 @@ namespace System.Data.Entity.Hooks
 
         private void ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
+            var entry = new DbEntityEntryAdapter(Entry(e.Entity));
             foreach (var loadHook in _loadHooks)
             {
-                loadHook.HookEntry(Entry(e.Entity));
+                loadHook.HookEntry(entry);
             }
         }
     }

@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity.Hooks.Tests.Stubs;
-using System.Data.Entity.Infrastructure;
 using Moq;
 using NUnit.Framework;
 
@@ -38,8 +37,8 @@ namespace System.Data.Entity.Hooks.Tests
             _dbContext.Foos.Add(foo);
             _dbContext.SaveChanges();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(_dbContext.Entry(foo)), Times.Once);
-            _hook2.Verify(dbHook => dbHook.HookEntry(_dbContext.Entry(foo)), Times.Once);
+            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
+            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
         }
 
         [Test]
@@ -58,8 +57,8 @@ namespace System.Data.Entity.Hooks.Tests
 
             _dbContext.Foos.Load();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<DbEntityEntry>()), Times.Once);
-            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<DbEntityEntry>()), Times.Once);
+            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
+            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
         }
 
         [Test]
@@ -72,7 +71,7 @@ namespace System.Data.Entity.Hooks.Tests
             _dbContext.Foos.Add(foo);
             _dbContext.SaveChanges();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(_dbContext.Entry(foo)), Times.Never);
+            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
         }
 
         [Test]
@@ -89,7 +88,7 @@ namespace System.Data.Entity.Hooks.Tests
 
             _dbContext.Foos.Load();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(_dbContext.Entry(foo)), Times.Never);
+            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
         }
 
         [Test]
@@ -103,7 +102,7 @@ namespace System.Data.Entity.Hooks.Tests
             var savedEntities = _dbContext.SaveChanges();
 
             Assert.That(savedEntities, Is.EqualTo(1));
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<DbEntityEntry>()), Times.Never);
+            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
         }
     }
 }
