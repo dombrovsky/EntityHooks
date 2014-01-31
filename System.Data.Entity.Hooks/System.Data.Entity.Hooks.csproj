@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbContextHooker.cs" />
     <Compile Include="DbHook.cs" />
     <Compile Include="DbHookContext.cs" />
     <Compile Include="IDbHook.cs" />
