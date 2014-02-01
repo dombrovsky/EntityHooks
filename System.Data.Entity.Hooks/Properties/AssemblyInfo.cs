@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("System.Data.Entity.Hooks")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyProduct("System.Data.Entity.Hooks")]
+[assembly: AssemblyProduct("EntityHooks")]
 [assembly: AssemblyCopyright("Copyright © Volodymyr Dombrovskyi 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,3 +32,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyInformationalVersion("1.0.0-alpha")]

@@ -1,2 +1,2 @@
-DbContextHooks
+EntityHooks
 ==============

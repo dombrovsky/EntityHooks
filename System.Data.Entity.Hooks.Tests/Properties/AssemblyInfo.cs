@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("System.Data.Entity.Hooks.Tests")]
+[assembly: AssemblyProduct("EntityHooks")]
 [assembly: AssemblyCopyright("Copyright © Volodymyr Dombrovskyi 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
