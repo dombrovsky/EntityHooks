@@ -1,12 +1,10 @@
-﻿using System.Data.Entity.Infrastructure;
-
-namespace System.Data.Entity.Hooks
+﻿namespace System.Data.Entity.Hooks
 {
     /// <summary>
     /// Database hook for entity type.
     /// </summary>
     /// <typeparam name="TEntity">Type of entity to hook.</typeparam>
-    public sealed class DbHook<TEntity> : IDbHook where TEntity : class
+    public class DbHook<TEntity> : IDbHook where TEntity : class
     {
         private readonly Action<TEntity> _hookAction;
         private readonly EntityState _hookEntityState;
