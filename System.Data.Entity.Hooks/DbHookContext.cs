@@ -9,7 +9,7 @@ namespace System.Data.Entity.Hooks
     /// <summary>
     /// An Entity Framework DbContext that provides possibility to hook load and save actions.
     /// </summary>
-    public abstract class DbHookContext : DbContext
+    public abstract class DbHookContext : DbContext, IDbHookRegistrar
     {
         private readonly List<IDbHook> _loadHooks = new List<IDbHook>();
         private readonly List<IDbHook> _preSaveHooks = new List<IDbHook>();
@@ -175,5 +175,27 @@ namespace System.Data.Entity.Hooks
                 loadHook.HookEntry(entry);
             }
         }
+
+        #region IDbHookRegistrar
+
+        /// <summary>
+        /// Registers a hook to run before save data occurs.
+        /// </summary>
+        /// <param name="dbHook">The hook to register.</param>
+        void IDbHookRegistrar.RegisterSaveHook(IDbHook dbHook)
+        {
+            RegisterPreSaveHook(dbHook);
+        }
+
+        /// <summary>
+        /// Registers a hook to run on object materialization stage.
+        /// </summary>
+        /// <param name="dbHook">The hook to register.</param>
+        void IDbHookRegistrar.RegisterLoadHook(IDbHook dbHook)
+        {
+            RegisterLoadHook(dbHook);
+        }
+
+        #endregion
     }
 }
