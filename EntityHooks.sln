@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Tests", "System.Data.Entity.Hooks.Tests\System.Data.Entity.Hooks.Tests.csproj", "{66735633-0F0F-4D97-913B-4C39173C58B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Fluent", "System.Data.Entity.Hooks.Fluent\System.Data.Entity.Hooks.Fluent.csproj", "{FDE46A48-0358-403E-8F5F-CA085109055D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Fluent.Tests", "System.Data.Entity.Hooks.Fluent.Tests\System.Data.Entity.Hooks.Fluent.Tests.csproj", "{44C581EE-E437-4126-932C-C4549AFDEB77}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +22,13 @@ Global
 		{66735633-0F0F-4D97-913B-4C39173C58B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{66735633-0F0F-4D97-913B-4C39173C58B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66735633-0F0F-4D97-913B-4C39173C58B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDE46A48-0358-403E-8F5F-CA085109055D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDE46A48-0358-403E-8F5F-CA085109055D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDE46A48-0358-403E-8F5F-CA085109055D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDE46A48-0358-403E-8F5F-CA085109055D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C581EE-E437-4126-932C-C4549AFDEB77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C581EE-E437-4126-932C-C4549AFDEB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C581EE-E437-4126-932C-C4549AFDEB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
