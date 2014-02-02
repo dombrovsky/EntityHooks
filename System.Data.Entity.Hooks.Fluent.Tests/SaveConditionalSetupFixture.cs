@@ -25,18 +25,10 @@ namespace System.Data.Entity.Hooks.Fluent.Tests
             var registrar = new Mock<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
-            var dbEntityEntry = new Mock<IDbEntityEntry>();
-            dbEntityEntry.Setup(entry => entry.Entity).Returns(new FooEntity());
-            dbEntityEntry.Setup(entry => entry.State).Returns(entityState);
-
+            var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity(), entityState);
             var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => true, acceptableState);
-            setup.Do(s => Assert.Pass("Hook invoked"));
 
-            Assert.That(registeredHook, Is.Not.Null, "Hook not registered");
-
-            registeredHook.HookEntry(dbEntityEntry.Object);
-
-            Assert.Fail("Hook not invoked");
+            ActAndAssert(setup, ref registeredHook, dbEntityEntry, true);
         }
 
         [TestCase(EntityState.Added, EntityState.Deleted)]
@@ -55,18 +47,10 @@ namespace System.Data.Entity.Hooks.Fluent.Tests
             var registrar = new Mock<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
-            var dbEntityEntry = new Mock<IDbEntityEntry>();
-            dbEntityEntry.Setup(entry => entry.Entity).Returns(new FooEntity());
-            dbEntityEntry.Setup(entry => entry.State).Returns(entityState);
-
+            var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity(), entityState);
             var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => true, acceptableState);
-            setup.Do(s => Assert.Fail("Hook invoked"));
 
-            Assert.That(registeredHook, Is.Not.Null, "Hook not registered");
-
-            registeredHook.HookEntry(dbEntityEntry.Object);
-
-            Assert.Pass("Hook not invoked");
+            ActAndAssert(setup, ref registeredHook, dbEntityEntry, false);
         }
 
         protected override void SetupRegisterHook(Mock<IDbHookRegistrar> registrar, Action<IDbHook> registerAction)

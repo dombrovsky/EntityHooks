@@ -15,19 +15,11 @@ namespace System.Data.Entity.Hooks.Fluent.Tests
             var registrar = new Mock<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
-            var dbEntityEntry = new Mock<IDbEntityEntry>();
-            dbEntityEntry.Setup(entry => entry.Entity).Returns(new FooEntity {Foo = 42});
-            dbEntityEntry.Setup(entry => entry.State).Returns(EntityState.Unchanged);
+            var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity { Foo = 42 }, EntityState.Unchanged);
 
             var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
 
-            setup.Do(s => Assert.Pass("Hook invoked"));
-
-            Assert.That(registeredHook, Is.Not.Null, "Hook not registered");
-
-            registeredHook.HookEntry(dbEntityEntry.Object);
-
-            Assert.Fail("Hook not invoked");
+            ActAndAssert(setup, ref registeredHook, dbEntityEntry, true);
         }
 
         [Test]
@@ -38,18 +30,10 @@ namespace System.Data.Entity.Hooks.Fluent.Tests
             var registrar = new Mock<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
-            var dbEntityEntry = new Mock<IDbEntityEntry>();
-            dbEntityEntry.Setup(entry => entry.Entity).Returns(new FooEntity { Foo = 0 });
-            dbEntityEntry.Setup(entry => entry.State).Returns(EntityState.Unchanged);
-
+            var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity {Foo = 0}, EntityState.Unchanged);
             var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
-            setup.Do(s => Assert.Fail("Hook invoked"));
 
-            Assert.That(registeredHook, Is.Not.Null, "Hook not registered");
-
-            registeredHook.HookEntry(dbEntityEntry.Object);
-
-            Assert.Pass("Hook not invoked");
+            ActAndAssert(setup, ref registeredHook, dbEntityEntry, false);
         }
 
         [Test]
@@ -60,20 +44,12 @@ namespace System.Data.Entity.Hooks.Fluent.Tests
             var registrar = new Mock<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
-            var dbEntityEntry = new Mock<IDbEntityEntry>();
-            dbEntityEntry.Setup(entry => entry.Entity).Returns(new FooEntity { Foo = 42, Bar = 11 });
-            dbEntityEntry.Setup(entry => entry.State).Returns(EntityState.Unchanged);
+            var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity { Foo = 42, Bar = 11}, EntityState.Unchanged);
 
             var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
             setup = setup.And(foo => foo.Bar == 11);
 
-            setup.Do(s => Assert.Pass("Hook invoked"));
-
-            Assert.That(registeredHook, Is.Not.Null, "Hook not registered");
-
-            registeredHook.HookEntry(dbEntityEntry.Object);
-
-            Assert.Fail("Hook not invoked");
+            ActAndAssert(setup, ref registeredHook, dbEntityEntry, true);
         }
 
         [Test]
@@ -84,20 +60,12 @@ namespace System.Data.Entity.Hooks.Fluent.Tests
             var registrar = new Mock<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
-            var dbEntityEntry = new Mock<IDbEntityEntry>();
-            dbEntityEntry.Setup(entry => entry.Entity).Returns(new FooEntity { Foo = 42, Bar = 11 });
-            dbEntityEntry.Setup(entry => entry.State).Returns(EntityState.Unchanged);
+            var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity { Foo = 42, Bar = 11 }, EntityState.Unchanged);
 
             var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
             setup = setup.And(foo => foo.Bar == 42);
 
-            setup.Do(s => Assert.Fail("Hook invoked"));
-
-            Assert.That(registeredHook, Is.Not.Null, "Hook not registered");
-
-            registeredHook.HookEntry(dbEntityEntry.Object);
-
-            Assert.Pass("Hook not invoked");
+            ActAndAssert(setup, ref registeredHook, dbEntityEntry, false);
         }
 
         protected abstract IConditionalSetup<T> CreateConditionalSetup<T>(IDbHookRegistrar dbHookRegistrar, Predicate<T> predicate, EntityState entityState) where T : class;
