@@ -65,6 +65,8 @@
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="ConditionalSetupFixture.cs" />
+    <Compile Include="SaveHookAttacherFixture.cs" />
+    <Compile Include="LoadHookAttacherFixture.cs" />
     <Compile Include="SaveConditionalSetupFixture.cs" />
     <Compile Include="LoadConditionalSetupFixture.cs" />
     <Compile Include="SaveSetupFixture.cs" />

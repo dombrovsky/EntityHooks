@@ -66,13 +66,17 @@
     <Compile Include="IFluentInterface.cs" />
     <Compile Include="IHookSetup.cs" />
     <Compile Include="IInvokeSetup.cs" />
+    <Compile Include="ILoadHookAttacher.cs" />
     <Compile Include="ILoadSetup.cs" />
     <Compile Include="Internal\ConditionalSetup.cs" />
     <Compile Include="Internal\HookSetup.cs" />
     <Compile Include="Internal\LoadConditionalSetup.cs" />
+    <Compile Include="Internal\LoadHookAttacher.cs" />
     <Compile Include="Internal\LoadSetup.cs" />
     <Compile Include="Internal\SaveConditionalSetup.cs" />
+    <Compile Include="Internal\SaveHookAttacher.cs" />
     <Compile Include="Internal\SaveSetup.cs" />
+    <Compile Include="ISaveHookAttacher.cs" />
     <Compile Include="ISaveSetup.cs" />
     <Compile Include="ITypedHookSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
