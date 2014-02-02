@@ -15,7 +15,9 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="System.Data.Entity.Hooks.dll" target="lib\net40\System.Data.Entity.Hooks.dll" />
-        <file src="System.Data.Entity.Hooks.xml" target="lib\net40\System.Data.Entity.Hooks.xml" />
+        <file src="..\out\release\System.Data.Entity.Hooks.dll" target="lib\net40\System.Data.Entity.Hooks.dll" />
+        <file src="..\out\release\System.Data.Entity.Hooks.Fluent.dll" target="lib\net40\System.Data.Entity.Hooks.Fluent.dll" />
+        <file src="..\out\release\System.Data.Entity.Hooks.Fluent.xml" target="lib\net40\System.Data.Entity.Hooks.Fluent.xml" />
+        <file src="..\out\release\System.Data.Entity.Hooks.xml" target="lib\net40\System.Data.Entity.Hooks.xml" />
     </files>
 </package>
