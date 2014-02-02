@@ -1,0 +1,25 @@
+<Project DefaultTargets="release" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <StageDir>$(MSBuildThisFileDirectory)..\out\</StageDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Solutions Include="..\EntityHooks.sln" />
+  </ItemGroup>
+
+  <Target Name="Debug">
+    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Debug" />
+  </Target>
+
+  <Target Name="Release">
+    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release40" />
+    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release45" />
+  </Target>
+
+  <Target Name="Clean" >
+    <RemoveDir Directories="$(StageDir)" ContinueOnError="true" />
+    <MakeDir Directories="$(StageDir)"/>
+  </Target>
+
+</Project>
