@@ -25,7 +25,7 @@
         /// <returns>The setup for a hook.</returns>
         protected override IConditionalSetup<T> OnAnd(IDbHookRegistrar dbHookRegistrar, Predicate<T> predicate, EntityState entityState)
         {
-            return new SaveConditionalSetup<T>(dbHookRegistrar, predicate, entityState);
+            return new LoadConditionalSetup<T>(dbHookRegistrar, predicate);
         }
 
         /// <summary>

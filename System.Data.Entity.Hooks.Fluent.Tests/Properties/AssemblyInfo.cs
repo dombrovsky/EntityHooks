@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("System.Data.Entity.Hooks.Fluent")]
+[assembly: AssemblyTitle("System.Data.Entity.Hooks.Fluent.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("EntityHooks")]
-[assembly: AssemblyCopyright("Copyright © Volodymyr Dombrovskyi 2014")]
+[assembly: AssemblyProduct("System.Data.Entity.Hooks.Fluent.Tests")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("aa40d2dd-9f59-4133-92c8-c83612991e32")]
+[assembly: Guid("f2161d28-e4de-4c82-9f27-5ff8f9cd24cb")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,6 +34,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0-alpha")]
-
-[assembly: InternalsVisibleTo("System.Data.Entity.Hooks.Fluent.Tests")]
