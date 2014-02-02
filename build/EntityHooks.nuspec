@@ -15,9 +15,13 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="..\out\release\System.Data.Entity.Hooks.dll" target="lib\net40\System.Data.Entity.Hooks.dll" />
-        <file src="..\out\release\System.Data.Entity.Hooks.Fluent.dll" target="lib\net40\System.Data.Entity.Hooks.Fluent.dll" />
-        <file src="..\out\release\System.Data.Entity.Hooks.Fluent.xml" target="lib\net40\System.Data.Entity.Hooks.Fluent.xml" />
-        <file src="..\out\release\System.Data.Entity.Hooks.xml" target="lib\net40\System.Data.Entity.Hooks.xml" />
+        <file src="..\out\release40\System.Data.Entity.Hooks.dll" target="lib\net40\System.Data.Entity.Hooks.dll" />
+        <file src="..\out\release40\System.Data.Entity.Hooks.Fluent.dll" target="lib\net40\System.Data.Entity.Hooks.Fluent.dll" />
+        <file src="..\out\release40\System.Data.Entity.Hooks.Fluent.xml" target="lib\net40\System.Data.Entity.Hooks.Fluent.xml" />
+        <file src="..\out\release40\System.Data.Entity.Hooks.xml" target="lib\net40\System.Data.Entity.Hooks.xml" />
+        <file src="..\out\release45\System.Data.Entity.Hooks.dll" target="lib\net45\System.Data.Entity.Hooks.dll" />
+        <file src="..\out\release45\System.Data.Entity.Hooks.Fluent.dll" target="lib\net45\System.Data.Entity.Hooks.Fluent.dll" />
+        <file src="..\out\release45\System.Data.Entity.Hooks.Fluent.xml" target="lib\net45\System.Data.Entity.Hooks.Fluent.xml" />
+        <file src="..\out\release45\System.Data.Entity.Hooks.xml" target="lib\net45\System.Data.Entity.Hooks.xml" />
     </files>
 </package>

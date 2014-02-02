@@ -13,7 +13,8 @@
   </Target>
 
   <Target Name="Release">
-    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release" />
+    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release40" />
+    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release45" />
   </Target>
 
   <Target Name="Clean" >
