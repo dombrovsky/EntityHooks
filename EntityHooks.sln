@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks", "src\System.Data.Entity.Hooks\System.Data.Entity.Hooks.csproj", "{431B123A-63DA-461E-BE75-CDE419261A22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Tests", "tests\System.Data.Entity.Hooks.Tests\System.Data.Entity.Hooks.Tests.csproj", "{66735633-0F0F-4D97-913B-4C39173C58B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Test", "tests\System.Data.Entity.Hooks.Test\System.Data.Entity.Hooks.Test.csproj", "{66735633-0F0F-4D97-913B-4C39173C58B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Fluent", "src\System.Data.Entity.Hooks.Fluent\System.Data.Entity.Hooks.Fluent.csproj", "{FDE46A48-0358-403E-8F5F-CA085109055D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Fluent.Tests", "tests\System.Data.Entity.Hooks.Fluent.Tests\System.Data.Entity.Hooks.Fluent.Tests.csproj", "{44C581EE-E437-4126-932C-C4549AFDEB77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Data.Entity.Hooks.Fluent.Test", "tests\System.Data.Entity.Hooks.Fluent.Test\System.Data.Entity.Hooks.Fluent.Test.csproj", "{44C581EE-E437-4126-932C-C4549AFDEB77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
