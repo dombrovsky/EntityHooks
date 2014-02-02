@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Fluent.Internal;
 
-namespace System.Data.Entity.Hooks.Fluent.Tests
+namespace System.Data.Entity.Hooks.Fluent.Test
 {
     [TestFixture]
     internal class LoadConditionalSetupFixture : ConditionalSetupFixture

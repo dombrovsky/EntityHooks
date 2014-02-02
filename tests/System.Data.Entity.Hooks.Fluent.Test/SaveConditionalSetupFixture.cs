@@ -1,9 +1,9 @@
 ﻿using Moq;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Fluent.Internal;
-using System.Data.Entity.Hooks.Fluent.Tests.Stubs;
+using System.Data.Entity.Hooks.Fluent.Test.Stubs;
 
-namespace System.Data.Entity.Hooks.Fluent.Tests
+namespace System.Data.Entity.Hooks.Fluent.Test
 {
     [TestFixture]
     internal class SaveConditionalSetupFixture : ConditionalSetupFixture
