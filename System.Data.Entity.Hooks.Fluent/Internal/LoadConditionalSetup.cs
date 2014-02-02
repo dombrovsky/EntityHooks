@@ -12,7 +12,7 @@
         /// <param name="dbHookRegistrar">The database hook registrar.</param>
         /// <param name="predicate">The predicate.</param>
         public LoadConditionalSetup(IDbHookRegistrar dbHookRegistrar, Predicate<T> predicate)
-            : base(dbHookRegistrar, predicate, EntityState.Unchanged)
+            : base(dbHookRegistrar, predicate, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added)
         {
         }
 
