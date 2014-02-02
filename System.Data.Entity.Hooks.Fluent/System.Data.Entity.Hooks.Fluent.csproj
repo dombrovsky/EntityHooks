@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbContextExtensions.cs" />
     <Compile Include="DbHookRegistrarExtensions.cs" />
     <Compile Include="IConditionalSetup.cs" />
     <Compile Include="IFluentInterface.cs" />
