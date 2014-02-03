@@ -6,8 +6,9 @@ It is designed to be easy-to-use, unit-testable and IoC compatible.
 
 ## How to use
 
-There are two ways to hook into DbContext load/save operations: 
+There are few ways to hook into DbContext load/save operations: 
 - using a DbContextHooker class passing your DbContext instance into constructor;
+- using fluent interface;
 - deriving your DbContext from DbHookContext class. That option allows you to attach post-save hooks.
 
 ### Fluent interface
@@ -36,4 +37,12 @@ dbContext.CreateHook()
          .OnSave<Order>()
          .When(order => order.CustomerId == null || order.CategoryId == null)
          .Do(order => dbContext.Set<Order>().Remove(order));
+```
+However, it is still possible to attach any *IDbHook* implementation through fluent interface:
+```csharp
+dbContext.OnLoad()
+         .Attach(new MyFancyHook())
+         .Attach(new CustomHook());
+dbContext.OnSave()
+         .Attach(new MyFancyHook());
 ```
