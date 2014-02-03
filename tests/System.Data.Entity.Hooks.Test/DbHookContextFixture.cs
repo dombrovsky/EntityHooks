@@ -1,6 +1,6 @@
-﻿using System.Data.Entity.Hooks.Test.Stubs;
-using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
+using System.Data.Entity.Hooks.Test.Stubs;
 
 namespace System.Data.Entity.Hooks.Test
 {
@@ -18,17 +18,17 @@ namespace System.Data.Entity.Hooks.Test
         public void ShouldRunPostSaveHooks_OnSave()
         {
             var dbContext = new DbHookContextStub();
-            var hook1 = new Mock<IDbHook>();
-            var hook2 = new Mock<IDbHook>();
-            dbContext.AddPostSaveHook(hook1.Object);
-            dbContext.AddPostSaveHook(hook2.Object);
+            var hook1 = Substitute.For<IDbHook>();
+            var hook2 = Substitute.For<IDbHook>();
+            dbContext.AddPostSaveHook(hook1);
+            dbContext.AddPostSaveHook(hook2);
 
             var foo = new FooEntityStub();
             dbContext.Foos.Add(foo);
             dbContext.SaveChanges();
 
-            hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-            hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
+            hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
         protected override void RegisterLoadHook(IDbHook hook)

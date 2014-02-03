@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Test.Stubs;
 
@@ -71,10 +71,10 @@ namespace System.Data.Entity.Hooks.Test
 
         private IDbEntityEntry SetupDbEntityEntry(object entity, EntityState entityState)
         {
-            var entry = new Mock<IDbEntityEntry>();
-            entry.Setup(entityEntry => entityEntry.Entity).Returns(entity);
-            entry.Setup(entityEntry => entityEntry.State).Returns(entityState);
-            return entry.Object;
+            var entry = Substitute.For<IDbEntityEntry>();
+            entry.Entity.Returns(entity);
+            entry.State.Returns(entityState);
+            return entry;
         }
     }
 }

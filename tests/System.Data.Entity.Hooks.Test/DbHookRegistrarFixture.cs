@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Test.Stubs;
 
@@ -7,15 +7,15 @@ namespace System.Data.Entity.Hooks.Test
     [TestFixture]
     internal abstract class DbHookRegistrarFixture
     {
-        private Mock<IDbHook> _hook1;
-        private Mock<IDbHook> _hook2;
+        private IDbHook _hook1;
+        private IDbHook _hook2;
         private IDbContext _dbContext;
 
         [SetUp]
         public void SetUp()
         {
-            _hook1 = new Mock<IDbHook>();
-            _hook2 = new Mock<IDbHook>();
+            _hook1 = Substitute.For<IDbHook>();
+            _hook2 = Substitute.For<IDbHook>();
         }
 
         [TearDown]
@@ -31,15 +31,15 @@ namespace System.Data.Entity.Hooks.Test
         public void ShouldRunPreSaveHooks_OnSave()
         {
             _dbContext = SetupDbContext();
-            RegisterPreSaveHook(_hook1.Object);
-            RegisterPreSaveHook(_hook2.Object);
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
 
             var foo = new FooEntityStub();
             _dbContext.Foos.Add(foo);
             _dbContext.SaveChanges();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
         [Test]
@@ -53,26 +53,26 @@ namespace System.Data.Entity.Hooks.Test
 
             _dbContext = SetupDbContext();
 
-            RegisterLoadHook(_hook1.Object);
-            RegisterLoadHook(_hook2.Object);
+            RegisterLoadHook(_hook1);
+            RegisterLoadHook(_hook2);
 
             _dbContext.Foos.Load();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
-            _hook2.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Once);
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
         [Test]
         public void ShouldNotRunLoadHooks_OnSave()
         {
             _dbContext = SetupDbContext();
-            RegisterLoadHook(_hook1.Object);
+            RegisterLoadHook(_hook1);
 
             var foo = new FooEntityStub();
             _dbContext.Foos.Add(foo);
             _dbContext.SaveChanges();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
+            _hook1.DidNotReceive().HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
         [Test]
@@ -85,11 +85,11 @@ namespace System.Data.Entity.Hooks.Test
             _dbContext.Dispose();
 
             _dbContext = SetupDbContext();
-            RegisterPreSaveHook(_hook1.Object);
+            RegisterPreSaveHook(_hook1);
 
             _dbContext.Foos.Load();
 
-            _hook1.Verify(dbHook => dbHook.HookEntry(It.IsAny<IDbEntityEntry>()), Times.Never);
+            _hook1.DidNotReceive().HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
         protected abstract void RegisterLoadHook(IDbHook hook);
