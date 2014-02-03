@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Fluent.Internal;
 using System.Data.Entity.Hooks.Fluent.Test.Stubs;
@@ -11,23 +11,23 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         [Test]
         public void ShouldRegisterLoadHook_OnDo()
         {
-            var registrar = new Mock<IDbHookRegistrar>();
-            var setup = CreateTypedHookSetup<FooEntity>(registrar.Object);
-
+            var registrar = Substitute.For<IDbHookRegistrar>();
+            var setup = CreateTypedHookSetup<FooEntity>(registrar);
+            
             setup.Do(s => { });
 
-            registrar.Verify(hookRegistrar => hookRegistrar.RegisterLoadHook(It.IsAny<IDbHook>()), Times.Once);
+            registrar.Received(1).RegisterLoadHook(Arg.Any<IDbHook>());
         }
 
         [Test]
         public void ShouldNotRegisterSaveHook_OnDo()
         {
-            var registrar = new Mock<IDbHookRegistrar>();
-            var setup = CreateTypedHookSetup<FooEntity>(registrar.Object);
+            var registrar = Substitute.For<IDbHookRegistrar>();
+            var setup = CreateTypedHookSetup<FooEntity>(registrar);
 
             setup.Do(s => { });
 
-            registrar.Verify(hookRegistrar => hookRegistrar.RegisterSaveHook(It.IsAny<IDbHook>()), Times.Never);
+            registrar.DidNotReceive().RegisterSaveHook(Arg.Any<IDbHook>());
         }
 
         protected override IInvokeSetup<T> CreateTypedHookSetup<T>(IDbHookRegistrar dbHookRegistrar)
@@ -35,9 +35,9 @@ namespace System.Data.Entity.Hooks.Fluent.Test
             return new LoadSetup<T>(dbHookRegistrar);
         }
 
-        protected override void SetupRegisterHook(Mock<IDbHookRegistrar> registrar, Action<IDbHook> registerAction)
+        protected override void SetupRegisterHook(IDbHookRegistrar registrar, Action<IDbHook> registerAction)
         {
-            registrar.Setup(hookRegistrar => hookRegistrar.RegisterLoadHook(It.IsAny<IDbHook>())).Callback(registerAction);
+            registrar.When(hookRegistrar => hookRegistrar.RegisterLoadHook(Arg.Any<IDbHook>())).Do(info => registerAction(info.Arg<IDbHook>()));
         }
     }
 }

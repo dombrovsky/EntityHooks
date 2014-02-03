@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Fluent.Test.Stubs;
 
@@ -12,12 +12,12 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         {
             IDbHook registeredHook = null;
 
-            var registrar = new Mock<IDbHookRegistrar>();
+            var registrar = Substitute.For<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
             var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity { Foo = 42 }, EntityState.Unchanged);
 
-            var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
+            var setup = CreateConditionalSetup<FooEntity>(registrar, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
 
             ActAndAssert(setup, ref registeredHook, dbEntityEntry, true);
         }
@@ -27,11 +27,11 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         {
             IDbHook registeredHook = null;
 
-            var registrar = new Mock<IDbHookRegistrar>();
+            var registrar = Substitute.For<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
             var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity {Foo = 0}, EntityState.Unchanged);
-            var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
+            var setup = CreateConditionalSetup<FooEntity>(registrar, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
 
             ActAndAssert(setup, ref registeredHook, dbEntityEntry, false);
         }
@@ -41,12 +41,12 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         {
             IDbHook registeredHook = null;
 
-            var registrar = new Mock<IDbHookRegistrar>();
+            var registrar = Substitute.For<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
             var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity { Foo = 42, Bar = 11}, EntityState.Unchanged);
 
-            var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
+            var setup = CreateConditionalSetup<FooEntity>(registrar, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
             setup = setup.And(foo => foo.Bar == 11);
 
             ActAndAssert(setup, ref registeredHook, dbEntityEntry, true);
@@ -57,12 +57,12 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         {
             IDbHook registeredHook = null;
 
-            var registrar = new Mock<IDbHookRegistrar>();
+            var registrar = Substitute.For<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
             var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity { Foo = 42, Bar = 11 }, EntityState.Unchanged);
 
-            var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
+            var setup = CreateConditionalSetup<FooEntity>(registrar, foo => foo.Foo == 42, EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added);
             setup = setup.And(foo => foo.Bar == 42);
 
             ActAndAssert(setup, ref registeredHook, dbEntityEntry, false);

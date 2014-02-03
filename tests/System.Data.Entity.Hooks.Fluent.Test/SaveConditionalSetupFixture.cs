@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Fluent.Internal;
 using System.Data.Entity.Hooks.Fluent.Test.Stubs;
@@ -22,11 +22,11 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         {
             IDbHook registeredHook = null;
 
-            var registrar = new Mock<IDbHookRegistrar>();
+            var registrar = Substitute.For<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
             var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity(), entityState);
-            var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => true, acceptableState);
+            var setup = CreateConditionalSetup<FooEntity>(registrar, foo => true, acceptableState);
 
             ActAndAssert(setup, ref registeredHook, dbEntityEntry, true);
         }
@@ -44,18 +44,18 @@ namespace System.Data.Entity.Hooks.Fluent.Test
         {
             IDbHook registeredHook = null;
 
-            var registrar = new Mock<IDbHookRegistrar>();
+            var registrar = Substitute.For<IDbHookRegistrar>();
             SetupRegisterHook(registrar, hook => registeredHook = hook);
 
             var dbEntityEntry = SetupDbEntityEntry(() => new FooEntity(), entityState);
-            var setup = CreateConditionalSetup<FooEntity>(registrar.Object, foo => true, acceptableState);
+            var setup = CreateConditionalSetup<FooEntity>(registrar, foo => true, acceptableState);
 
             ActAndAssert(setup, ref registeredHook, dbEntityEntry, false);
         }
 
-        protected override void SetupRegisterHook(Mock<IDbHookRegistrar> registrar, Action<IDbHook> registerAction)
+        protected override void SetupRegisterHook(IDbHookRegistrar registrar, Action<IDbHook> registerAction)
         {
-            registrar.Setup(hookRegistrar => hookRegistrar.RegisterSaveHook(It.IsAny<IDbHook>())).Callback(registerAction);
+            registrar.When(hookRegistrar => hookRegistrar.RegisterSaveHook(Arg.Any<IDbHook>())).Do(info => registerAction(info.Arg<IDbHook>()));
         }
 
         protected override IConditionalSetup<T> CreateConditionalSetup<T>(IDbHookRegistrar dbHookRegistrar, Predicate<T> predicate, EntityState entityState)

@@ -1,4 +1,4 @@
-﻿using Moq;
+﻿using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Fluent.Internal;
 
@@ -7,9 +7,9 @@ namespace System.Data.Entity.Hooks.Fluent.Test
     [TestFixture]
     internal class LoadConditionalSetupFixture : ConditionalSetupFixture
     {
-        protected override void SetupRegisterHook(Mock<IDbHookRegistrar> registrar, Action<IDbHook> registerAction)
+        protected override void SetupRegisterHook(IDbHookRegistrar registrar, Action<IDbHook> registerAction)
         {
-            registrar.Setup(hookRegistrar => hookRegistrar.RegisterLoadHook(It.IsAny<IDbHook>())).Callback(registerAction);
+            registrar.When(hookRegistrar => hookRegistrar.RegisterLoadHook(Arg.Any<IDbHook>())).Do(info => registerAction(info.Arg<IDbHook>()));
         }
 
         protected override IConditionalSetup<T> CreateConditionalSetup<T>(IDbHookRegistrar dbHookRegistrar, Predicate<T> predicate, EntityState entityState)
