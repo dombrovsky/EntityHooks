@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Hooks.Tests.Stubs
+﻿namespace System.Data.Entity.Hooks.Test.Stubs
 {
     internal class DbHookContextStub : DbHookContext, IDbContext
     {

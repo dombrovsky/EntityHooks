@@ -1,8 +1,8 @@
-﻿using System.Data.Entity.Hooks.Tests.Stubs;
+﻿using System.Data.Entity.Hooks.Test.Stubs;
 using Moq;
 using NUnit.Framework;
 
-namespace System.Data.Entity.Hooks.Tests
+namespace System.Data.Entity.Hooks.Test
 {
     internal sealed class DbContextHookerFixture : DbHookRegistrarFixture
     {

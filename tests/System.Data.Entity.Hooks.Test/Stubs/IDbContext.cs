@@ -1,4 +1,4 @@
-﻿namespace System.Data.Entity.Hooks.Tests.Stubs
+﻿namespace System.Data.Entity.Hooks.Test.Stubs
 {
     internal interface IDbContext : IDisposable
     {

@@ -1,8 +1,8 @@
 ﻿using Moq;
 using NUnit.Framework;
-using System.Data.Entity.Hooks.Tests.Stubs;
+using System.Data.Entity.Hooks.Test.Stubs;
 
-namespace System.Data.Entity.Hooks.Tests
+namespace System.Data.Entity.Hooks.Test
 {
     [TestFixture]
     internal abstract class DbHookRegistrarFixture
