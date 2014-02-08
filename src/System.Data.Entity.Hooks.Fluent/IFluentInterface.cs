@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace System.Data.Entity.Hooks.Fluent
 {
@@ -19,6 +20,8 @@ namespace System.Data.Entity.Hooks.Fluent
         /// <summary>
         /// Redeclaration that hides the <see cref="object.GetType()"/> method from IntelliSense.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "GetType", Justification = "Need to hide System.Object methods.")]
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Need to hide System.Object methods.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         Type GetType();
 
@@ -38,6 +41,6 @@ namespace System.Data.Entity.Hooks.Fluent
         /// Redeclaration that hides the <see cref="object.Equals(object)"/> method from IntelliSense.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        bool Equals(object obj);
+        bool Equals(object value);
     }
 }
