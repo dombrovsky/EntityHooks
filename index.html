@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>EntityHooks by dombrovsky</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>EntityHooks</h1>
+          <h2>Provides an extension points for EF DbContext in order to hook database operations.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/dombrovsky/EntityHooks/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/dombrovsky/EntityHooks/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/dombrovsky/EntityHooks" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="entityframework-hooks" class="anchor" href="#entityframework-hooks"><span class="octicon octicon-link"></span></a>EntityFramework Hooks</h1>
+
+<p>EntityHooks provides an extension points for EF Code First DbContext in order to hook database operations.
+It is designed to be easy-to-use, unit-testable and IoC compatible.</p>
+
+<h2>
+<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<p>There are few ways to hook into DbContext load/save operations: </p>
+
+<ul>
+<li>using a DbContextHooker class passing your DbContext instance into constructor;</li>
+<li>using fluent interface;</li>
+<li>deriving your DbContext from DbHookContext class. That option allows you to attach post-save hooks.</li>
+</ul><h3>
+<a name="fluent-interface" class="anchor" href="#fluent-interface"><span class="octicon octicon-link"></span></a>Fluent interface</h3>
+
+<p>Reference <em>System.Data.Entity.Hooks.Fluent.dll</em> assembly and include namespace in order to use fluent hooking interface.</p>
+
+<div class="highlight highlight-csharp"><pre><span class="k">using</span> <span class="nn">System.Data.Entity.Hooks.Fluent</span><span class="p">;</span>
+</pre></div>
+
+<p>Logging of loading <em>Order</em> entities from datatbase:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="n">dbContext</span><span class="p">.</span><span class="n">CreateHook</span><span class="p">()</span>
+        <span class="p">.</span><span class="n">OnLoad</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;()</span>
+        <span class="p">.</span><span class="n">When</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">order</span><span class="p">.</span><span class="n">Status</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span>
+        <span class="p">.</span><span class="n">Do</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">_logger</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">"Loaded entity "</span> <span class="p">+</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
+</pre></div>
+
+<p>Setting date <em>Order</em> entity was modified:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="n">dbContext</span><span class="p">.</span><span class="n">CreateHook</span><span class="p">()</span>
+         <span class="p">.</span><span class="n">OnSave</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;()</span>
+         <span class="p">.</span><span class="n">When</span><span class="p">(</span><span class="n">EntityState</span><span class="p">.</span><span class="n">Added</span> <span class="p">|</span> <span class="n">EntityState</span><span class="p">.</span><span class="n">Modified</span><span class="p">)</span>
+         <span class="p">.</span><span class="n">And</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">order</span><span class="p">.</span><span class="n">Status</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span>
+         <span class="p">.</span><span class="n">Do</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">order</span><span class="p">.</span><span class="n">ModifiedDate</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">);</span>
+</pre></div>
+
+<p>Delete <em>Order</em> entity if either <em>CustomerId</em> or <em>CategoryId</em> is <em>NULL</em>:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="n">dbContext</span><span class="p">.</span><span class="n">CreateHook</span><span class="p">()</span>
+         <span class="p">.</span><span class="n">OnSave</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;()</span>
+         <span class="p">.</span><span class="n">When</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">order</span><span class="p">.</span><span class="n">CustomerId</span> <span class="p">==</span> <span class="k">null</span> <span class="p">||</span> <span class="n">order</span><span class="p">.</span><span class="n">CategoryId</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+         <span class="p">.</span><span class="n">Do</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">dbContext</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;().</span><span class="n">Remove</span><span class="p">(</span><span class="n">order</span><span class="p">));</span>
+</pre></div>
+
+<p>However, it is still possible to attach any <em>IDbHook</em> implementation through fluent interface:</p>
+
+<div class="highlight highlight-csharp"><pre><span class="n">dbContext</span><span class="p">.</span><span class="n">OnLoad</span><span class="p">()</span>
+         <span class="p">.</span><span class="n">Attach</span><span class="p">(</span><span class="k">new</span> <span class="n">MyFancyHook</span><span class="p">())</span>
+         <span class="p">.</span><span class="n">Attach</span><span class="p">(</span><span class="k">new</span> <span class="n">CustomHook</span><span class="p">());</span>
+<span class="n">dbContext</span><span class="p">.</span><span class="n">OnSave</span><span class="p">()</span>
+         <span class="p">.</span><span class="n">Attach</span><span class="p">(</span><span class="k">new</span> <span class="n">MyFancyHook</span><span class="p">());</span>
+</pre></div>
+        </section>
+
+        <footer>
+          EntityHooks is maintained by <a href="https://github.com/dombrovsky">dombrovsky</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
