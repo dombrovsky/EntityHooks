@@ -92,6 +92,54 @@ namespace System.Data.Entity.Hooks.Test
             _hook1.DidNotReceive().HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
+        [Test]
+        public void IfEntityStateChangedBySaveHook_NextHookShouldBeCalledWithNewState()
+        {
+            _dbContext = SetupDbContext();
+            _hook1
+                .When(hook => hook.HookEntry(Arg.Any<IDbEntityEntry>()))
+                .Do(info =>
+                    {
+                        var foo = (FooEntityStub) info.Arg<IDbEntityEntry>().Entity;
+                        _dbContext.Foos.Remove(foo);
+                    });
+
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
+
+            _dbContext.Foos.Add(new FooEntityStub());
+            _dbContext.SaveChanges();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Detached));
+        }
+
+        [Test]
+        public void IfEntityStateChangedByLoadHook_NextHookShouldBeCalledWithNewState()
+        {
+            _dbContext = SetupDbContext();
+            _dbContext.Foos.Add(new FooEntityStub());
+            _dbContext.SaveChanges();
+            _dbContext.Dispose();
+            _dbContext = SetupDbContext();
+
+            _hook1
+                .When(hook => hook.HookEntry(Arg.Any<IDbEntityEntry>()))
+                .Do(info =>
+                {
+                    var foo = (FooEntityStub)info.Arg<IDbEntityEntry>().Entity;
+                    _dbContext.Foos.Remove(foo);
+                });
+
+            RegisterLoadHook(_hook1);
+            RegisterLoadHook(_hook2);
+
+            _dbContext.Foos.Load();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Deleted));
+        }
+
         protected abstract void RegisterLoadHook(IDbHook hook);
 
         protected abstract void RegisterPreSaveHook(IDbHook hook);
