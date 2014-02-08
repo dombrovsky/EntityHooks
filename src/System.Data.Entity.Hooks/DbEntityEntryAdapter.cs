@@ -33,5 +33,14 @@ namespace System.Data.Entity.Hooks
         {
             get { return _entry.State; }
         }
+
+        /// <summary>
+        /// Freezes further entity state changes.
+        /// </summary>
+        /// <returns>Freezed instance of <see cref="IDbEntityEntry"/></returns>.
+        public IDbEntityEntry AsFreezed()
+        {
+            return new DbEntityEntryFreezedAdapter(_entry);
+        }
     }
 }

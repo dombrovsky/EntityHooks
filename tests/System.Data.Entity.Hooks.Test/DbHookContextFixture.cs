@@ -31,6 +31,20 @@ namespace System.Data.Entity.Hooks.Test
             hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
+        [Test]
+        public void PostSaveHookShouldReflectPreSaveEntityState()
+        {
+            var dbContext = new DbHookContextStub();
+            var hook1 = Substitute.For<IDbHook>();
+            dbContext.AddPostSaveHook(hook1);
+
+            var foo = new FooEntityStub();
+            dbContext.Foos.Add(foo);
+            dbContext.SaveChanges();
+
+            hook1.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Added));
+        }
+
         protected override void RegisterLoadHook(IDbHook hook)
         {
             _dbHookContext.AddLoadHook(hook);

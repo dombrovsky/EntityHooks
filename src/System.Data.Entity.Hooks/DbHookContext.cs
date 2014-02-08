@@ -124,13 +124,15 @@ namespace System.Data.Entity.Hooks
                 }
             }
 
+            var freezedEntries = entries.Select(adapter => adapter.AsFreezed()).ToArray();
+
             try
             {
                 return base.SaveChanges();
             }
             finally
             {
-                foreach (var entry in entries)
+                foreach (var entry in freezedEntries)
                 {
                     foreach (var postSaveHook in _postSaveHooks)
                     {
