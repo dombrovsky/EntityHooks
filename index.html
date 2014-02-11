@@ -10,7 +10,7 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>EntityFramework Hooks</title>
+    <title>EntityFramework Hooks by dombrovsky</title>
   </head>
 
   <body>
@@ -24,8 +24,8 @@
 
         <section id="downloads" class="clearfix">
           <a href="https://github.com/dombrovsky/EntityHooks/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/dombrovsky/EntityHooks/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
           <a href="https://github.com/dombrovsky/EntityHooks" id="view-on-github" class="button"><span>View on GitHub</span></a>
-          <a href="https://www.nuget.org/packages/EntityHooks/" id="view-nuget" class="button"><span>NuGet gallery</span></a>
         </section>
 
         <hr>
@@ -40,13 +40,15 @@ It is designed to be easy-to-use, unit-testable and IoC compatible.</p>
 <h2>
 <a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
 
-<p>There are few ways to hook into DbContext load/save operations: </p>
+<h3>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h3>
 
-<ul>
-<li>using a DbContextHooker class passing your DbContext instance into constructor;</li>
-<li>using fluent interface;</li>
-<li>deriving your DbContext from DbHookContext class. That option allows you to attach post-save hooks.</li>
-</ul><h3>
+<p>Install <a href="https://www.nuget.org/packages/EntityHooks/">NuGet package</a> from <a href="http://docs.nuget.org/docs/start-here/using-the-package-manager-console">Package Manager Console</a>:</p>
+
+<pre><code>PM&gt; Install-Package EntityHooks
+</code></pre>
+
+<h3>
 <a name="fluent-interface" class="anchor" href="#fluent-interface"><span class="octicon octicon-link"></span></a>Fluent interface</h3>
 
 <p>Reference <em>System.Data.Entity.Hooks.Fluent.dll</em> assembly and include namespace in order to use fluent hooking interface.</p>
@@ -62,7 +64,7 @@ It is designed to be easy-to-use, unit-testable and IoC compatible.</p>
         <span class="p">.</span><span class="n">Do</span><span class="p">(</span><span class="n">order</span> <span class="p">=&gt;</span> <span class="n">_logger</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">"Loaded entity "</span> <span class="p">+</span> <span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">));</span>
 </pre></div>
 
-<p>Setting date <em>Order</em> entity was modified:</p>
+<p>Setting date when <em>Order</em> entity has been modified:</p>
 
 <div class="highlight highlight-csharp"><pre><span class="n">dbContext</span><span class="p">.</span><span class="n">CreateHook</span><span class="p">()</span>
          <span class="p">.</span><span class="n">OnSave</span><span class="p">&lt;</span><span class="n">Order</span><span class="p">&gt;()</span>
@@ -87,10 +89,34 @@ It is designed to be easy-to-use, unit-testable and IoC compatible.</p>
 <span class="n">dbContext</span><span class="p">.</span><span class="n">OnSave</span><span class="p">()</span>
          <span class="p">.</span><span class="n">Attach</span><span class="p">(</span><span class="k">new</span> <span class="n">MyFancyHook</span><span class="p">());</span>
 </pre></div>
+
+<h2>
+<a name="how-hooks-are-called" class="anchor" href="#how-hooks-are-called"><span class="octicon octicon-link"></span></a>How hooks are called</h2>
+
+<ul>
+<li>Load hooks are called in the order they were registered when <a href="http://msdn.microsoft.com/en-us/library/system.data.objects.objectcontext.objectmaterialized(v=vs.110).aspx"><em>ObjectContext.ObjectMaterialized</em></a> event occur.</li>
+<li>Save hooks are called in the order they were registered for each entry in <a href="http://msdn.microsoft.com/en-us/library/system.data.entity.infrastructure.dbchangetracker(v=vs.113).aspx"><em>DbChangeTracker</em></a> before actual saving.</li>
+</ul><p>Hook is any class, that implements <em>IDbHook</em> interface. </p>
+
+<div class="highlight highlight-csharp"><pre><span class="k">public</span> <span class="k">interface</span> <span class="n">IDbHook</span>
+<span class="p">{</span>
+        <span class="k">void</span> <span class="nf">HookEntry</span><span class="p">(</span><span class="n">IDbEntityEntry</span> <span class="n">entry</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p><em>IDbEntityEntry</em> provides information about entity and it's state (<a href="http://msdn.microsoft.com/en-us/library/system.data.entitystate(v=vs.110).aspx"><em>EntityState</em></a> enumeration).
+As you may have noticed, <em>IDbHook</em> interface don't have neither information about type of entity, which hook should be applied to, nor predicate when to invoke hook. That means, that implementors of <em>IDbHook</em> interface should provide their own logic, if needed.</p>
+
+<p><strong>NOTE:</strong> Instead of implementing <em>IDbHook</em> you may use in-build generic <code>DbHook&lt;TEntity&gt;</code> class, which provides calls user-specified action for entities of <em>TEntity</em> type and specific state.</p>
+
+<h3>
+<a name="entity-state-mutability" class="anchor" href="#entity-state-mutability"><span class="octicon octicon-link"></span></a>Entity state mutability</h3>
+
+<p>Entity state, provided by <em>IDbEntityEntry</em> argument passed to <em>IDbHook.HookEntry</em> method, reflects current state for Load or Pre-save hooks. If hook modifies state of entity, all further invoked hooks for that entity called with new state. However, for Post-save hooks it reflects the state of entity right before saving changes, despite the fact that actual state in that case might be <em>Unchanged</em>.</p>
         </section>
 
         <footer>
-          EntityHooks is maintained by <a href="https://github.com/dombrovsky">dombrovsky</a><br>
+          EntityFramework Hooks is maintained by <a href="https://github.com/dombrovsky">dombrovsky</a><br>
           This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
         </footer>
 
