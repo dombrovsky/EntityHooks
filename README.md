@@ -49,6 +49,10 @@ dbContext.OnSave()
 ```
 
 ## How hooks are called
+
+- Load hooks are called in the order they were registered when [*ObjectContext.ObjectMaterialized*](http://msdn.microsoft.com/en-us/library/system.data.objects.objectcontext.objectmaterialized(v=vs.110).aspx) event occur.
+- Save hooks are called in the order they were registered for each entry in [*DbChangeTracker*](http://msdn.microsoft.com/en-us/library/system.data.entity.infrastructure.dbchangetracker(v=vs.113).aspx) before actual saving.
+
 Hook is any class, that implements *IDbHook* interface. 
 ```csharp
 public interface IDbHook
@@ -60,10 +64,6 @@ public interface IDbHook
 As you may have noticed, *IDbHook* interface don't have neither information about type of entity, which hook should be applied to, nor predicate when to invoke hook. That means, that implementors of *IDbHook* interface should provide their own logic, if needed.
 
 **NOTE:** Instead of implementing *IDbHook* you may use in-build generic ```DbHook<TEntity>``` class, which provides calls user-specified action for entities of *TEntity* type and specific state.
-
-Load hooks are called in the order they were registered when [*ObjectContext.ObjectMaterialized*](http://msdn.microsoft.com/en-us/library/system.data.objects.objectcontext.objectmaterialized(v=vs.110).aspx) event occur.
-
-Save hooks are called in the order they were registered for each entry in [*DbChangeTracker*](http://msdn.microsoft.com/en-us/library/system.data.entity.infrastructure.dbchangetracker(v=vs.113).aspx) before actual saving.
 
 ### Entity state mutability
 Entity state, provided by *IDbEntityEntry* argument passed to *IDbHook.HookEntry* method, reflects current state for Load or Pre-save hooks. If hook modifies state of entity, all further invoked hooks for that entity called with new state. However, for Post-save hooks it reflects the state of entity right before saving changes, despite the fact that actual state in that case might be *Unchanged*.
