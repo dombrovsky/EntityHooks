@@ -6,7 +6,7 @@
         <title>EntityFramework Hooks</title>
         <authors>Volodymyr Dombrovskyi</authors>
         <licenseUrl>https://github.com/dombrovsky/EntityHooks/blob/master/LICENSE</licenseUrl>
-        <projectUrl>https://github.com/dombrovsky/EntityHooks</projectUrl>
+        <projectUrl>http://dombrovsky.github.io/EntityHooks</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>EntityHooks provides an extension points for EF Code First DbContext in order to hook database operations.</description>
         <tags>ef entityframework entity dbcontext hook hooks codefirst</tags>
