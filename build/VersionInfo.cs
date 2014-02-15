@@ -13,6 +13,6 @@ using System.Reflection;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0-rc1")]
+[assembly: AssemblyInformationalVersion("1.0.0")]
 
 [assembly: SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly", Justification = "Need to include suffix in AssemblyInformationalVersion.")]
