@@ -60,10 +60,10 @@ public interface IDbHook
         void HookEntry(IDbEntityEntry entry);
 }
 ```
-*IDbEntityEntry* provides information about entity and it's state ([*EntityState*](http://msdn.microsoft.com/en-us/library/system.data.entitystate(v=vs.110).aspx) enumeration).
-As you may have noticed, *IDbHook* interface don't have neither information about type of entity, which hook should be applied to, nor predicate when to invoke hook. That means, that implementors of *IDbHook* interface should provide their own logic, if needed.
+*IDbEntityEntry* contains information about entity and it's state ([*EntityState*](http://msdn.microsoft.com/en-us/library/system.data.entitystate(v=vs.110).aspx) enumeration).
+As you may have noticed, *IDbHook* interface don't have neither information about type of entity, which hook should be applied to, nor predicate when to invoke hook. That means, that implementors of *IDbHook* interface should implement their own logic, if needed.
 
-**NOTE:** Instead of implementing *IDbHook* you may use in-build generic ```DbHook<TEntity>``` class, which provides calls user-specified action for entities of *TEntity* type and specific state.
+**NOTE:** Instead of implementing *IDbHook* you may use in-build generic ```DbHook<TEntity>``` class, which calls user-specified action for entities of *TEntity* type and specific state.
 
 ### Entity state mutability
 Entity state, provided by *IDbEntityEntry* argument passed to *IDbHook.HookEntry* method, reflects current state for Load or Pre-save hooks. If hook modifies state of entity, all further invoked hooks for that entity called with new state. However, for Post-save hooks it reflects the state of entity right before saving changes, despite the fact that actual state in that case might be *Unchanged*.
