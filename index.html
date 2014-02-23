@@ -104,10 +104,10 @@ It is designed to be easy-to-use, unit-testable and IoC compatible.</p>
 <span class="p">}</span>
 </pre></div>
 
-<p><em>IDbEntityEntry</em> provides information about entity and it's state (<a href="http://msdn.microsoft.com/en-us/library/system.data.entitystate(v=vs.110).aspx"><em>EntityState</em></a> enumeration).
-As you may have noticed, <em>IDbHook</em> interface don't have neither information about type of entity, which hook should be applied to, nor predicate when to invoke hook. That means, that implementors of <em>IDbHook</em> interface should provide their own logic, if needed.</p>
+<p><em>IDbEntityEntry</em> contains information about entity and it's state (<a href="http://msdn.microsoft.com/en-us/library/system.data.entitystate(v=vs.110).aspx"><em>EntityState</em></a> enumeration).
+As you may have noticed, <em>IDbHook</em> interface don't have neither information about type of entity, which hook should be applied to, nor predicate when to invoke hook. That means, that implementors of <em>IDbHook</em> interface should implement their own logic, if needed.</p>
 
-<p><strong>NOTE:</strong> Instead of implementing <em>IDbHook</em> you may use in-build generic <code>DbHook&lt;TEntity&gt;</code> class, which provides calls user-specified action for entities of <em>TEntity</em> type and specific state.</p>
+<p><strong>NOTE:</strong> Instead of implementing <em>IDbHook</em> you may use in-build generic <code>DbHook&lt;TEntity&gt;</code> class, which calls user-specified action for entities of <em>TEntity</em> type and specific state.</p>
 
 <h3>
 <a name="entity-state-mutability" class="anchor" href="#entity-state-mutability"><span class="octicon octicon-link"></span></a>Entity state mutability</h3>
