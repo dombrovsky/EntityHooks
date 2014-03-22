@@ -4,7 +4,7 @@ using System.Data.Entity.Hooks.Test.Stubs;
 
 namespace System.Data.Entity.Hooks.Test
 {
-    internal sealed class DbContextHookerFixture : DbHookRegistrarFixture
+    internal class DbContextHookerFixture : DbHookRegistrarFixture
     {
         private DbContextHooker _dbContextHooker;
 
@@ -45,8 +45,13 @@ namespace System.Data.Entity.Hooks.Test
         protected override IDbContext SetupDbContext()
         {
             var dbContext = new DbContextStub();
-            _dbContextHooker = new DbContextHooker(dbContext);
+            _dbContextHooker = CreateContextHooker(dbContext);
             return dbContext;
+        }
+
+        protected virtual DbContextHooker CreateContextHooker(DbContext dbContext)
+        {
+            return new DbContextHooker(dbContext);
         }
     }
 }

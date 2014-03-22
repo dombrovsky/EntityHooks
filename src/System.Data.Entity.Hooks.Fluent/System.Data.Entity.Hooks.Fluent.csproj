@@ -64,6 +64,7 @@
     <Compile Include="..\..\build\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ObjectContextExtensions.cs" />
     <Compile Include="DbContextExtensions.cs" />
     <Compile Include="DbHookRegistrarExtensions.cs" />
     <Compile Include="IConditionalSetup.cs" />

@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
 
 namespace System.Data.Entity.Hooks
 {
