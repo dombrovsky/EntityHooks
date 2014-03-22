@@ -171,7 +171,7 @@ namespace System.Data.Entity.Hooks
 
         private void ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
-            var entry = new DbEntityEntryAdapter(Entry(e.Entity));
+            var entry = new ObjectStateEntryAdapter(((IObjectContextAdapter)this).ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Entity));
             foreach (var loadHook in _loadHooks)
             {
                 loadHook.HookEntry(entry);

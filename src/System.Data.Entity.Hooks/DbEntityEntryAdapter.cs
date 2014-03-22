@@ -40,7 +40,7 @@ namespace System.Data.Entity.Hooks
         /// <returns>Freezed instance of <see cref="IDbEntityEntry"/></returns>.
         public IDbEntityEntry AsFreezed()
         {
-            return new DbEntityEntryFreezedAdapter(_entry);
+            return new EntityEntryFreezedAdapter(this);
         }
     }
 }
