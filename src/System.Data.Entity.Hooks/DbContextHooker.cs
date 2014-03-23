@@ -68,8 +68,8 @@ namespace System.Data.Entity.Hooks
         {
             var entries = _objectContext.ObjectStateManager
                 .GetObjectStateEntries(EntityState.Unchanged | EntityState.Modified | EntityState.Deleted | EntityState.Added)
+                .Where(entry => entry.Entity != null)
                 .Select(entry => new ObjectStateEntryAdapter(entry));
-
             foreach (var entry in entries)
             {
                 foreach (var preSaveHook in _saveHooks)
