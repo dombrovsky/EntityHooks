@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity.Core;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -171,10 +172,19 @@ namespace System.Data.Entity.Hooks
 
         private void ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
-            var entry = new ObjectStateEntryAdapter(((IObjectContextAdapter)this).ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Entity));
+            if (_loadHooks.Count == 0)
+                return;
+
+            var objectContext = ((IObjectContextAdapter) this).ObjectContext;
+
+            ObjectStateEntry stateEntry;
+            if (!objectContext.ObjectStateManager.TryGetObjectStateEntry(e.Entity, out stateEntry) || stateEntry ==null)
+                return;
+
+            var entity = new ObjectStateEntryAdapter(stateEntry);
             foreach (var loadHook in _loadHooks)
             {
-                loadHook.HookEntry(entry);
+                loadHook.HookEntry(entity);
             }
         }
 
