@@ -171,10 +171,22 @@ namespace System.Data.Entity.Hooks
 
         private void ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
-            var entry = new ObjectStateEntryAdapter(((IObjectContextAdapter)this).ObjectContext.ObjectStateManager.GetObjectStateEntry(e.Entity));
-            foreach (var loadHook in _loadHooks)
+            ObjectStateEntry objectStateEntry;
+            if (((IObjectContextAdapter)this).ObjectContext.ObjectStateManager.TryGetObjectStateEntry(e.Entity, out objectStateEntry))
             {
-                loadHook.HookEntry(entry);
+                var entry = new ObjectStateEntryAdapter(objectStateEntry);
+                foreach (var loadHook in _loadHooks)
+                {
+                    loadHook.HookEntry(entry);
+                }
+            }
+            else
+            {
+                var entry = new ImmutableEntityEntry(e.Entity, EntityState.Detached);
+                foreach (var loadHook in _loadHooks)
+                {
+                    loadHook.HookEntry(entry);
+                }
             }
         }
 

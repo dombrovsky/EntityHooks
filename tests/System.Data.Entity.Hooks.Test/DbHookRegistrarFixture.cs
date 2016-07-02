@@ -63,6 +63,39 @@ namespace System.Data.Entity.Hooks.Test
         }
 
         [Test]
+        public void ShouldRunLoadHooks_OnLoad_ForUntrackedEntities()
+        {
+            var foo = new FooEntityStub();
+            _dbContext = SetupDbContext();
+            _dbContext.Foos.Add(foo);
+            _dbContext.SaveChanges();
+            _dbContext.Dispose();
+
+            _dbContext = SetupDbContext();
+
+            RegisterLoadHook(_hook1);
+
+            _dbContext.Foos.AsNoTracking().Load();
+
+            _hook1.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Detached));
+        }
+
+        [Test]
+        public void ShouldRunPreSaveHooks_OnSave_ForAttachedEntities()
+        {
+            _dbContext = SetupDbContext();
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
+
+            var foo = new FooEntityStub();
+            _dbContext.Foos.Attach(foo);
+            _dbContext.SaveChanges();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+        }
+
+        [Test]
         public void ShouldNotRunLoadHooks_OnSave()
         {
             _dbContext = SetupDbContext();

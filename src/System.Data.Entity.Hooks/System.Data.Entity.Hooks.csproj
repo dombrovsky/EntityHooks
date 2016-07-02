@@ -66,6 +66,7 @@
     <Compile Include="..\..\build\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ImmutableEntityEntry.cs" />
     <Compile Include="ObjectStateEntryAdapter.cs" />
     <Compile Include="EntityEntryFreezedAdapter.cs" />
     <Compile Include="DbContextHooker.cs" />
