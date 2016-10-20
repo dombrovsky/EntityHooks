@@ -128,7 +128,13 @@ namespace System.Data.Entity.Hooks
 
             try
             {
-                return base.SaveChanges();
+                BeforeSaveChanges();
+
+                var rowsAffected = base.SaveChanges();
+
+                AfterSaveChanges(rowsAffected);
+
+                return rowsAffected;
             }
             finally
             {
@@ -167,6 +173,21 @@ namespace System.Data.Entity.Hooks
         protected void RegisterPostSaveHook(IDbHook dbHook)
         {
             _postSaveHooks.Add(dbHook);
+        }
+
+        /// <summary>
+        /// Called right before SaveChanges method of the DbContext is called, and after pre save hooks are executed.
+        /// </summary>
+        protected virtual void BeforeSaveChanges()
+        {
+        }
+
+        /// <summary>
+        /// Called right after SaveChanges method of the DbContext is called, and before post save hooks are executed.
+        /// </summary>
+        /// <param name="rowsAffected">The number of objects written to the underlying database.</param>
+        protected virtual void AfterSaveChanges(int rowsAffected)
+        {
         }
 
         private void ObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
