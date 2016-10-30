@@ -62,6 +62,9 @@ namespace System.Data.Entity.Hooks
         {
             _objectContext.ObjectMaterialized -= ObjectMaterialized;
             _objectContext.SavingChanges -= SavingChanges;
+
+            _loadHooks.Clear();
+            _saveHooks.Clear();
         }
 
         private void SavingChanges(object sender, EventArgs e)

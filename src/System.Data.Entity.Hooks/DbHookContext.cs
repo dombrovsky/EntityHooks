@@ -141,6 +141,31 @@ namespace System.Data.Entity.Hooks
                 }
             }
         }
+        
+        /// <summary>
+        /// Disposes the context. The underlying <see cref="T:System.Data.Entity.Core.Objects.ObjectContext"/> is also disposed if it was created
+        ///             is by this context or ownership was passed to this context when this context was created.
+        ///             The connection to the database (<see cref="T:System.Data.Common.DbConnection"/> object) is also disposed if it was created
+        ///             is by this context or ownership was passed to this context when this context was created.
+        ///             Hooks are cleared.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                base.Dispose(disposing);
+            }
+            finally 
+            {
+                if (disposing)
+                {
+                    _loadHooks.Clear();
+                    _preSaveHooks.Clear();
+                    _postSaveHooks.Clear();
+                }
+            }
+        }
 
         /// <summary>
         /// Registers a hook to run on object materialization stage.
