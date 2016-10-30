@@ -142,6 +142,23 @@ namespace System.Data.Entity.Hooks
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                base.Dispose(disposing);
+            }
+            finally 
+            {
+                if (disposing)
+                {
+                    _loadHooks.Clear();
+                    _preSaveHooks.Clear();
+                    _postSaveHooks.Clear();
+                }
+            }
+        }
+
         /// <summary>
         /// Registers a hook to run on object materialization stage.
         /// </summary>
