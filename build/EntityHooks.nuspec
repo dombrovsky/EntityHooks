@@ -11,7 +11,7 @@
         <description>EntityHooks provides an extension points for EF Code First DbContext in order to hook database operations.</description>
         <tags>ef entityframework entity dbcontext hook hooks codefirst</tags>
         <dependencies>
-            <dependency id="EntityFramework" version="6.0.0" />
+            <dependency id="EntityFramework" version="6.1.3" />
         </dependencies>
     </metadata>
     <files>

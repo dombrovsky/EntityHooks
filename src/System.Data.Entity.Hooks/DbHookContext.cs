@@ -3,8 +3,10 @@ using System.Data.Common;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+#if NET45
 using System.Threading;
 using System.Threading.Tasks;
+#endif
 
 namespace System.Data.Entity.Hooks
 {
@@ -158,7 +160,7 @@ namespace System.Data.Entity.Hooks
                 }
             }
         }
-
+#if NET45
         /// <summary>
         /// Asynchronously saves all changes made in this context to the underlying database and executes pre/post save hooks.
         /// 
@@ -228,6 +230,7 @@ namespace System.Data.Entity.Hooks
                 }
             }
         }
+#endif
 
         /// <summary>
         /// Registers a hook to run on object materialization stage.

@@ -41,6 +41,7 @@ namespace System.Data.Entity.Hooks.Test
             hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
         }
 
+#if NET45
         [Test]
         public void ShouldRunPostSaveHooks_OnSaveAsync()
         {
@@ -82,6 +83,41 @@ namespace System.Data.Entity.Hooks.Test
         }
 
         [Test]
+        public void ShouldNotExecutePostSaveHooks_WhenCanceled_OnSaveChangesAsync()
+        {
+            var dbContext = new DbHookContextStub();
+            var hook1 = Substitute.For<IDbHook>();
+            dbContext.AddPostSaveHook(hook1);
+
+            var foo = new FooEntityStub();
+            dbContext.Foos.Add(foo);
+            _cancellationTokenSource.Cancel();
+
+            try
+            {
+                dbContext.SaveChangesAsync(_cancellationTokenSource.Token).Wait();
+            }
+            catch (AggregateException) { }
+
+            hook1.DidNotReceive().HookEntry(Arg.Any<IDbEntityEntry>());
+        }
+
+        [Test]
+        public void PostSaveHookShouldReflectPreSaveAsyncEntityState()
+        {
+            var dbContext = new DbHookContextStub();
+            var hook1 = Substitute.For<IDbHook>();
+            dbContext.AddPostSaveHook(hook1);
+
+            var foo = new FooEntityStub();
+            dbContext.Foos.Add(foo);
+            dbContext.SaveChangesAsync().Wait();
+
+            hook1.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Added));
+        }
+#endif
+
+        [Test]
         public void ShouldRunPostSaveHooks_WhenExceptionOccured_OnSave()
         {
             var dbContext = new DbHookContextStub();
@@ -105,26 +141,6 @@ namespace System.Data.Entity.Hooks.Test
         }
 
         [Test]
-        public void ShouldNotExecutePostSaveHooks_WhenCanceled_OnSaveChangesAsync()
-        {
-            var dbContext = new DbHookContextStub();
-            var hook1 = Substitute.For<IDbHook>();
-            dbContext.AddPostSaveHook(hook1);
-
-            var foo = new FooEntityStub();
-            dbContext.Foos.Add(foo);
-            _cancellationTokenSource.Cancel();
-
-            try
-            {
-                dbContext.SaveChangesAsync(_cancellationTokenSource.Token).Wait();
-            }
-            catch (AggregateException){}
-            
-            hook1.DidNotReceive().HookEntry(Arg.Any<IDbEntityEntry>());
-        }
-
-        [Test]
         public void PostSaveHookShouldReflectPreSaveEntityState()
         {
             var dbContext = new DbHookContextStub();
@@ -134,20 +150,6 @@ namespace System.Data.Entity.Hooks.Test
             var foo = new FooEntityStub();
             dbContext.Foos.Add(foo);
             dbContext.SaveChanges();
-
-            hook1.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Added));
-        }
-
-        [Test]
-        public void PostSaveHookShouldReflectPreSaveAsyncEntityState()
-        {
-            var dbContext = new DbHookContextStub();
-            var hook1 = Substitute.For<IDbHook>();
-            dbContext.AddPostSaveHook(hook1);
-
-            var foo = new FooEntityStub();
-            dbContext.Foos.Add(foo);
-            dbContext.SaveChangesAsync().Wait();
 
             hook1.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Added));
         }
