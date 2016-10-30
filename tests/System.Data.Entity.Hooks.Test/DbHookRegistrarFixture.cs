@@ -1,4 +1,5 @@
-﻿using NSubstitute;
+﻿using System.Data.Entity.Infrastructure;
+using NSubstitute;
 using NUnit.Framework;
 using System.Data.Entity.Hooks.Test.Stubs;
 
@@ -37,6 +38,21 @@ namespace System.Data.Entity.Hooks.Test
             var foo = new FooEntityStub();
             _dbContext.Foos.Add(foo);
             _dbContext.SaveChanges();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+        }
+
+        [Test]
+        public void ShouldRunPreSaveHooks_OnSaveAsync()
+        {
+            _dbContext = SetupDbContext();
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
+
+            var foo = new FooEntityStub();
+            _dbContext.Foos.Add(foo);
+            _dbContext.SaveChangesAsync().Wait();
 
             _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
             _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
@@ -90,6 +106,21 @@ namespace System.Data.Entity.Hooks.Test
             var foo = new FooEntityStub();
             _dbContext.Foos.Attach(foo);
             _dbContext.SaveChanges();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+        }
+
+        [Test]
+        public void ShouldRunPreSaveHooks_OnSaveAsync_ForAttachedEntities()
+        {
+            _dbContext = SetupDbContext();
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
+
+            var foo = new FooEntityStub();
+            _dbContext.Foos.Attach(foo);
+            _dbContext.SaveChangesAsync().Wait();
 
             _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
             _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
@@ -171,6 +202,18 @@ namespace System.Data.Entity.Hooks.Test
 
             _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
             _hook2.Received(1).HookEntry(Arg.Is<IDbEntityEntry>(entry => entry.State == EntityState.Deleted));
+        }
+        
+        [Test]
+        public void ShouldRethrowOriginalException_OnSaveChangesAsync()
+        {
+            var dbContext = SetupDbContext();
+
+            var sameKey = Guid.NewGuid();
+            dbContext.Foos.Add(new FooEntityStub() { Id = sameKey });
+            dbContext.Foos.Add(new FooEntityStub() { Id = sameKey });
+
+            Assert.Throws<DbUpdateException>(async () => { await dbContext.SaveChangesAsync(); });
         }
 
         protected abstract void RegisterLoadHook(IDbHook hook);
