@@ -27,6 +27,50 @@ namespace System.Data.Entity.Hooks.Test
             }
         }
 
+#if NET45
+        [Test]
+        public void ShouldRunPreSaveHooks_OnSaveAsync_ForAttachedEntities()
+        {
+            _dbContext = SetupDbContext();
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
+
+            var foo = new FooEntityStub();
+            _dbContext.Foos.Attach(foo);
+            _dbContext.SaveChangesAsync().Wait();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+        }
+
+        [Test]
+        public void ShouldRethrowOriginalException_OnSaveChangesAsync()
+        {
+            var dbContext = SetupDbContext();
+
+            var sameKey = Guid.NewGuid();
+            dbContext.Foos.Add(new FooEntityStub() { Id = sameKey });
+            dbContext.Foos.Add(new FooEntityStub() { Id = sameKey });
+
+            Assert.Throws<Infrastructure.DbUpdateException>(async () => { await dbContext.SaveChangesAsync(); });
+        }
+
+        [Test]
+        public void ShouldRunPreSaveHooks_OnSaveAsync()
+        {
+            _dbContext = SetupDbContext();
+            RegisterPreSaveHook(_hook1);
+            RegisterPreSaveHook(_hook2);
+
+            var foo = new FooEntityStub();
+            _dbContext.Foos.Add(foo);
+            _dbContext.SaveChangesAsync().Wait();
+
+            _hook1.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+            _hook2.Received(1).HookEntry(Arg.Any<IDbEntityEntry>());
+        }
+#endif
+
         [Test]
         public void ShouldRunPreSaveHooks_OnSave()
         {

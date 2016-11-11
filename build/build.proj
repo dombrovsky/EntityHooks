@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Solutions Include="..\EntityHooks.4.0.sln" />
     <Solutions Include="..\EntityHooks.sln" />
   </ItemGroup>
 
@@ -13,8 +14,7 @@
   </Target>
 
   <Target Name="Release">
-    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release40" />
-    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release45" />
+    <MSBuild Projects="%(Solutions.Identity)" Properties="Configuration=Release" />
   </Target>
 
   <Target Name="Clean" >

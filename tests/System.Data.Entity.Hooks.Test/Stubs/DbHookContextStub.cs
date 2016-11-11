@@ -9,6 +9,12 @@
         {
         }
 
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<FooEntityStub>().HasKey(stub => stub.Id);
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<FooEntityStub> Foos { get; set; }
 
         public static void ResetConnections()

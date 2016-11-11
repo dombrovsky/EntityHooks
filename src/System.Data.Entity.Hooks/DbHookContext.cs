@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+#if NET45
+using System.Threading;
+using System.Threading.Tasks;
+#endif
 
 namespace System.Data.Entity.Hooks
 {
@@ -110,8 +114,23 @@ namespace System.Data.Entity.Hooks
 
         /// <summary>
         /// Saves all changes made in this context to the underlying database and executes pre/post save hooks.
+        /// 
         /// </summary>
-        /// <returns>The number of objects written to the underlying database.</returns>
+        /// 
+        /// <returns>
+        /// The number of state entries written to the underlying database. This can include
+        ///             state entries for entities and/or relationships. Relationship state entries are created for
+        ///             many-to-many relationships and relationships where there is no foreign key property
+        ///             included in the entity class (often referred to as independent associations).
+        /// 
+        /// </returns>
+        /// <exception cref="T:System.Data.Entity.Infrastructure.DbUpdateException">An error occurred sending updates to the database.</exception><exception cref="T:System.Data.Entity.Infrastructure.DbUpdateConcurrencyException">A database command did not affect the expected number of rows. This usually indicates an optimistic
+        ///             concurrency violation; that is, a row has been changed in the database since it was queried.
+        ///             </exception><exception cref="T:System.Data.Entity.Validation.DbEntityValidationException">The save was aborted because validation of entity property values failed.
+        ///             </exception><exception cref="T:System.NotSupportedException">An attempt was made to use unsupported behavior such as executing multiple asynchronous commands concurrently
+        ///             on the same context instance.</exception><exception cref="T:System.ObjectDisposedException">The context or connection have been disposed.</exception><exception cref="T:System.InvalidOperationException">Some error occurred attempting to process entities in the context either before or after sending commands
+        ///             to the database.
+        ///             </exception>
         public override int SaveChanges()
         {
             var entries = ChangeTracker.Entries().Select(entry => new DbEntityEntryAdapter(entry)).ToArray();
@@ -141,6 +160,61 @@ namespace System.Data.Entity.Hooks
                 }
             }
         }
+#if NET45
+        /// <summary>
+        /// Asynchronously saves all changes made in this context to the underlying database and executes pre/post save hooks.
+        /// 
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        ///             that any asynchronous operations have completed before calling another method on this context.
+        /// 
+        /// </remarks>
+        /// <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> to observe while waiting for the task to complete.
+        ///             </param>
+        /// <returns>
+        /// A task that represents the asynchronous save operation.
+        ///             The task result contains the number of state entries written to the underlying database. This can include
+        ///             state entries for entities and/or relationships. Relationship state entries are created for
+        ///             many-to-many relationships and relationships where there is no foreign key property
+        ///             included in the entity class (often referred to as independent associations).
+        /// 
+        /// </returns>
+        /// <exception cref="T:System.InvalidOperationException">Thrown if the context has been disposed.</exception>
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            var entries = ChangeTracker.Entries().Select(entry => new DbEntityEntryAdapter(entry)).ToArray();
+
+            foreach (var entry in entries)
+            {
+                foreach (var preSaveHook in _preSaveHooks)
+                {
+                    preSaveHook.HookEntry(entry);
+                }
+            }
+
+            var freezedEntries = entries.Select(adapter => adapter.AsFreezed()).ToArray();
+
+            try
+            {
+                return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+            finally
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    foreach (var entry in freezedEntries)
+                    {
+                        foreach (var postSaveHook in _postSaveHooks)
+                        {
+                            postSaveHook.HookEntry(entry);
+                        }
+                    }
+                }
+            }
+        }
+#endif
         
         /// <summary>
         /// Disposes the context. The underlying <see cref="T:System.Data.Entity.Core.Objects.ObjectContext"/> is also disposed if it was created
