@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace System.Data.Entity.Hooks
 {
     /// <summary>

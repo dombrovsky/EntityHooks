@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 #if NET45
 using System.Threading;
 using System.Threading.Tasks;

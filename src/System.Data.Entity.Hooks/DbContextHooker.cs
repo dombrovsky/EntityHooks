@@ -2,6 +2,8 @@
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace System.Data.Entity.Hooks
 {
@@ -10,7 +12,7 @@ namespace System.Data.Entity.Hooks
     /// </summary>
     public sealed class DbContextHooker : IDbHookRegistrar, IDisposable
     {
-        private readonly ObjectContext _objectContext;
+        private readonly DbContext _dbContext;
         private readonly List<IDbHook> _loadHooks;
         private readonly List<IDbHook> _saveHooks;
 
@@ -19,22 +21,23 @@ namespace System.Data.Entity.Hooks
         /// </summary>
         /// <param name="dbContext">The database context.</param>
         public DbContextHooker(DbContext dbContext)
-            : this(((IObjectContextAdapter)dbContext).ObjectContext)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbContextHooker"/> class.
-        /// </summary>
-        /// <param name="objectContext">The object context.</param>
-        public DbContextHooker(ObjectContext objectContext)
-        {
+            _dbContext = dbContext;
             _loadHooks = new List<IDbHook>();
             _saveHooks = new List<IDbHook>();
 
-            _objectContext = objectContext;
-            _objectContext.ObjectMaterialized += ObjectMaterialized;
-            _objectContext.SavingChanges += SavingChanges;
+            _dbContext.ChangeTracker.Tracked += ChangeTrackerOnTracked;
+            _dbContext.SavingChanges += DbContextOnSavingChanges;
+        }
+
+        private void DbContextOnSavingChanges(object? sender, SavingChangesEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ChangeTrackerOnTracked(object? sender, EntityTrackedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

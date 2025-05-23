@@ -1,7 +1,4 @@
-﻿#if NET45
-using System.Threading;
-using System.Threading.Tasks;
-#endif
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace System.Data.Entity.Hooks.Test.Stubs
 {
@@ -11,10 +8,8 @@ namespace System.Data.Entity.Hooks.Test.Stubs
 
         int SaveChanges();
 
-#if NET45
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
         Task<int> SaveChangesAsync();
-#endif
     }
 }

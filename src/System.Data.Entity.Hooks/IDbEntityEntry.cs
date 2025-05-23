@@ -1,4 +1,6 @@
-﻿namespace System.Data.Entity.Hooks
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace System.Data.Entity.Hooks
 {
     /// <summary>
     /// Provide access to information about and control of entities that are being tracked by the <see cref="T:System.Data.Entity.DbContext"/>.
